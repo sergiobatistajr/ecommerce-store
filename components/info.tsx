@@ -1,6 +1,10 @@
-import { Product } from "@/types";
-import Currency from "@/components/ui/currency";
+"use client";
+import { ShoppingCart } from "lucide-react";
 
+import Currency from "@/components/ui/currency";
+import Button from "@/components/ui/button";
+
+import { Product } from "@/types";
 interface InfoProps {
   data: Product;
 }
@@ -29,7 +33,10 @@ const Info: React.FC<InfoProps> = ({ data }) => {
         </div>
       </div>
       <div className="mt-10 flex items-center gap-x-3">
-        <Button></Button>
+        <Button className="flex items-center gap-x-2">
+          Add To Card
+          <ShoppingCart />
+        </Button>
       </div>
     </div>
   );
