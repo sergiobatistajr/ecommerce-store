@@ -1,25 +1,29 @@
-import ProductList from '@/components/product-list'
-import Gallery from '@/components/gallery';
-import Info from '@/components/info';
-import getProduct from '@/actions/get-product';
-import getProducts from '@/actions/get-products';
-import Container from '@/components/ui/container';
+import ProductList from "@/components/product-list";
+import Gallery from "@/components/gallery";
+import Info from "@/components/info";
+import getProduct from "@/actions/get-product";
+import getProducts from "@/actions/get-products";
+import Container from "@/components/ui/container";
+import NoResults from "@/components/ui/no-results";
 
 export const revalidate = 0;
 
 interface ProductPageProps {
   params: {
     productId: string;
-  },
+  };
 }
 
-const ProductPage: React.FC<ProductPageProps> = async ({ 
-  params
- }) => {
+const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   const product = await getProduct(params.productId);
-  const suggestedProducts = await getProducts({ 
-    categoryId: product?.category?.id
+
+  const suggestedProducts = await getProducts({
+    categoryId: product?.category?.id,
   });
+
+  const suggestedProductsFormatted = suggestedProducts?.filter(
+    (suggestedProduct) => suggestedProduct.id !== product?.id
+  );
 
   if (!product) {
     return null;
@@ -36,11 +40,18 @@ const ProductPage: React.FC<ProductPageProps> = async ({
             </div>
           </div>
           <hr className="my-10" />
-          <ProductList title="Related Items" items={suggestedProducts} />
+          {suggestedProductsFormatted ? (
+            <ProductList
+              title="Related Items"
+              items={suggestedProductsFormatted}
+            />
+          ) : (
+            <NoResults />
+          )}
         </div>
       </Container>
-    </div>  
-  )
-}
+    </div>
+  );
+};
 
 export default ProductPage;
